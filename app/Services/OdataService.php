@@ -14,13 +14,16 @@ class OdataService
     {
         $client = new Client('https://ru.enote.link/08efd710-4709-478f-bac1-2d1b7e209599/odata/standard.odata/', [
             'auth' => [
-                'odatatest',
-                'RpG~WU%nX'
+                env('ODATA_LOGIN'),
+                env('ODATA_PASS'),
             ],
         ]);
 
+        $date_start = env('ODATA_DATE_START');
+        $date_end = env('ODATA_DATE_END');
+
         return $client->{'Document_ДенежныйЧек'}->filter(
-            "Date ge datetime'2022-10-01T00:00:00' and Date le datetime'2022-12-31T23:59:59'"
+            "Date ge datetime'{$date_start}T00:00:00' and Date le datetime'{$date_end}T23:59:59'"
         )->get()->values();
     }
 
