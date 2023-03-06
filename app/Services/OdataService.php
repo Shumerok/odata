@@ -9,8 +9,7 @@ use Kily\Tools1C\OData\Client;
 
 class OdataService
 {
-
-    public function getMoneyCheck(): array
+    public function getMoneyCheck(string $date_start = '2022-10-01', string $date_end = '2022-12-31'): array
     {
         $client = new Client('https://ru.enote.link/08efd710-4709-478f-bac1-2d1b7e209599/odata/standard.odata/', [
             'auth' => [
@@ -19,15 +18,12 @@ class OdataService
             ],
         ]);
 
-        $date_start = env('ODATA_DATE_START');
-        $date_end = env('ODATA_DATE_END');
-
         return $client->{'Document_ДенежныйЧек'}->filter(
             "Date ge datetime'{$date_start}T00:00:00' and Date le datetime'{$date_end}T23:59:59'"
         )->get()->values();
     }
 
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         foreach ($data as $value) {
             MoneyCheck::create([
